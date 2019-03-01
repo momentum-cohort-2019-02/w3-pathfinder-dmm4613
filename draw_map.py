@@ -37,11 +37,11 @@ class Cartographer:
         for x in range(len(self.map.elevations[0])):
             for y in range(len(self.map.elevations)):
                 self.im.putpixel((x, y), (self.map.get_intensity(x, y), self.map.get_intensity(x, y), self.map.get_intensity(x, y)))        
-        self.im.save('elevation_map_find01.png')
+        self.im.save('elevation_map_find.png')
 
 class Pathfinder:
     
-    def __init__(self, map, filename, x=0, y=0):
+    def __init__(self, map, filename, y=0, x=0):
         self.map = map
         self.im = Image.open(filename)
         self.current_position = (x,y)
@@ -89,12 +89,14 @@ class Pathfinder:
         for x in range(len(self.map.elevations[0])-1):
             self.im.putpixel((x,y), (0, 255, 0))
             y = self.get_elevation_difference(x)
-        self.im.save('elevation_map_find01.png')
+        filename = input("Your optimal route has been drawn. Please enter a name for your file: ")
+        self.im.save(f'{filename}.png')
 
 if __name__ == "__main__":
    
     smallMap = Map('elevation_small.txt')
     drawer = Cartographer(smallMap)
     drawer.draw_the_map()
-    hiker = Pathfinder(smallMap, 'elevation_map_find01.png', y=280)
+    y = int(input(f"Where would you like to start on the map. Select a number between 0-{len(smallMap.elevations)} "))
+    hiker = Pathfinder(smallMap, 'elevation_map_find.png', y, x=0)
     hiker.mark_my_trail()
